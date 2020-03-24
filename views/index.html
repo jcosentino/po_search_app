@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel='stylesheet' type='text/css'>
+		<style>
+			.searchArea, .files-for-rendering {
+				text-align: center;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#searchbox {
+				width: 20vw;
+			}
+			#files {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-around;
+			}
+			.poImg, #pdf-div {
+				width: 50vw;
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+			}
+			.poImg {
+				padding-right: 5px;
+			}
+			#pdf-div {
+				padding-left: 5px;
+			}
+			#poPdf {
+				width: 50vw;
+				height: 100vh;
+			}
+			.vendorList > th, td {
+				border: 1px solid black;
+				word-wrap: break-word;
+				max-width: 10vw;
+				background-color: lightblue;
+			}
+			#poTd {
+				max-width: 15vw;
+			}
+			.table-div {
+				height: 500px;
+				overflow: auto;
+				padding: 0px;
+			}
+			#tableItems{
+				width: auto;
+			}
+			.vendorLink {
+				text-decoration: underline;
+				color: darkred;
+				cursor: pointer;
+			}
+			#searchbutton {
+				opacity: 0.6;
+  				cursor: not-allowed;
+			}
+			.table-with-labels {
+				text-decoration: underline;
+			}
+			.table-with-labels:hover {
+				color: orange;
+				cursor: pointer;
+			}
+			noscript {
+				text-align: center;
+			}
+			.warning {
+				color: red;
+				font-size: 2vh;
+			}
+			#updateButton {
+				color: darkred;
+			}
+		</style>
+
+	</head>
+	<body>
+		<noscript><h1>Please enable JavaScript in order to properly use this app</h1></noscript>
+		<div class='searchArea'>
+			<button id='clearButton' class='btn btn-secondary' onclick="location.href='/'">Clear</button>
+			<form method='post' action='/findPonWithText' id='post_form'>
+				<input type='text' name='po_search_box' id='searchbox'><br>
+				<input type='radio' name='Search' value='po_number_search' id='po_number_search' onclick='changePost()' checked>Search PO Numbers
+				<input type='radio' name='Search' value='po_text_search' id='po_text_search' onclick='changePost()'>Search PO Files<br>
+				<input type='submit' value='Search' class='btn btn-secondary' id='searchbutton' disabled='true'><br>
+			</form>
+		</div>
+
+		<div class='searchArea'>
+			<form method='post' action='/buildSearchIndex' onsubmit='confirmFullUpdate()'>
+				<p class='warning'>WARNING: This button will re-index the database. Doing so will take around 20 minutes. Click to proceed--->
+				<input type='submit' value='Re-Index' class='btn btn-warning' id='updateButton'></p><br>
+			</form>
+		</div>
+
+		<div class='table-div-top'>
+			<table class='files-for-rendering' class='vendorList'>
+				<thead>
+					<tr>
+						<th class='table-with-labels' onclick="location.href='/sortPon'">PO#</th>
+						<th class='table-with-labels' onclick="location.href='/sortVendorName'">Vendor</th>
+						<th class='table-with-labels' onclick="location.href='/sortPoStatus'">Status</th>
+						<th class='table-with-labels' onclick="location.href='/sortRequestedBy'">Requester</th>
+						<th class='table-with-labels' onclick="location.href='/sortCostCenterNumber'">Cost Center #</th>
+						<th class='table-with-labels' onclick="location.href='/sortCreatedDate'">Created Date</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+
+		<div class='table-div'>
+			<table class='files-for-rendering' class='vendorList' id='tableItems'>
+				<tfoot>
+					<% var count = 0; %>
+					<% for(let v of poVendorList) { %>
+					<tr>
+				 		<td class='vendorLink' id='poTd'>
+				 			<form method='post' action='/findPO'>
+								<input class='btn btn-link' type='submit' name='po_number' value='<%= v.poN %>' id='button_<%- count %>'/>
+							</form>
+				 		</td>
+				 		<td><%= v.vendorName %></td>
+				 		<td><%= v.poStatus %></td>
+				 		<td><%= v.requestedBy %></td>
+				 		<td><%= v.costCenterNumber %></td>
+				 		<td><%= v.createdDate %></td>
+				 	</tr>
+				 	<% count++; %>
+					<% } %>
+				</tfoot>
+			</table>
+		</div>
+
+
+		<% if (locals.poImg) { %>
+			<%- include ./partials/poFiles.html %>
+		<% } else{ %>
+			<p></p>
+		<% } %>
+
+	<script type='text/javascript'>
+		//These methods enable the searchbutton whenever non-whitespace text is typed into the searchbox
+		//The searcbutton will be disabled otherwise
+		const runPost = (id) => {
+			document.getElementById('searchbox').value = id;
+			document.getElementById('searchbutton').disabled = false;
+			document.getElementById('searchbutton').style.opacity = 1.0;
+			document.getElementById('searchbutton').style.cursor = 'not-allowed';
+		}
+
+		const checkSearchboxLength = () => {
+			let input = document.querySelector('input');
+			let log = document.getElementById('log');
+			input.oninput = handleInput;
+
+			function handleInput(e) {
+  				let length = e.target.value.trim().length;
+				if(length === 0){
+					document.getElementById('searchbutton').disabled = true;
+					document.getElementById('searchbutton').style.opacity = 0.6;
+					document.getElementById('searchbutton').style.cursor = 'not-allowed';
+				} else{
+					document.getElementById('searchbutton').style.cursor = 'default';
+					document.getElementById('searchbutton').disabled = false;
+					document.getElementById('searchbutton').style.opacity = 1.0;
+				}
+			}
+		}
+		checkSearchboxLength();
+
+		const changePost = () => {
+			const po_number_search_isChecked = document.getElementById('po_number_search').checked;
+			const po_text_search_isChecked = document.getElementById('po_text_search').checked;
+
+			if(po_number_search_isChecked){
+				document.getElementById('searchbox').placeholder = 'Type here to search for a PO number';
+				document.getElementById('post_form').action = '/findPonWithText';
+			}
+			if(po_text_search_isChecked){
+				document.getElementById('searchbox').placeholder = 'Type here to search all PO files for some text.'
+				document.getElementById('post_form').action = '/findPoFileWithText';
+			}
+		}
+		changePost();
+		
+		const confirmFullUpdate = () => {
+			// const text = 'This will force a complete refresh on the search index. Doing so may cause a delay of up to 20 minutes. Would you like to continue?';
+			// return confirm(text);
+		}
+	</script>
+	</body>
+</html>

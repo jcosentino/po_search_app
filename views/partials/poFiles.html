@@ -1,0 +1,19 @@
+<div class='files-for-rendering'>
+	<div id='files'>
+		<% if (poImg === 'undefined') { %>
+			<h1>The corresponding approval image was not found.</h1>
+		<% } else{ %>
+			<a href='purchases/<%= poImg %>' target='_blank' rel='noopener noreferrer' class='poImg'>
+				<img src='purchases/<%= poImg %>' class='poImg' />
+			</a>
+	 	<% } %>
+	 	<div id='pdf-div'>
+		 	<% if (poPdf === 'undefined') { %>
+				<h1>That purchase order was not found.</h1>
+			<% } else{ %>
+				<a href='<%= poPdf %>' target='_blank' rel='noopener noreferrer'>Click to open PDF!</a>
+				<embed src='<%= poPdf %>' type='application/pdf' id='poPdf' />
+		 	<% } %>
+		</div>
+	</div>
+</div>

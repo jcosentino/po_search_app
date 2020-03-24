@@ -1,0 +1,23 @@
+{
+  "name": "po_search_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Cosentino",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "opn": "^5.4.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "bin": "app.js",
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": "views/**/*"
+  }
+}
