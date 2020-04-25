@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet"
+			  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			  crossorigin="anonymous"
+			  >
 		<link rel='stylesheet' type='text/css'>
 		<style>
 			.searchArea, .files-for-rendering {
@@ -9,72 +13,94 @@
 				margin-left: auto;
 				margin-right: auto;
 			}
+
 			#searchbox {
 				width: 20vw;
 			}
+
 			#files {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-around;
 			}
+			
 			.poImg, #pdf-div {
 				width: 50vw;
 				height: 100vh;
 				display: flex;
 				flex-direction: column;
 			}
+
 			.poImg {
 				padding-right: 5px;
 			}
+
 			#pdf-div {
 				padding-left: 5px;
 			}
+
 			#poPdf {
 				width: 50vw;
 				height: 100vh;
 			}
+
 			.vendorList > th, td {
 				border: 1px solid black;
 				word-wrap: break-word;
 				max-width: 10vw;
 				background-color: lightblue;
 			}
+
 			#poTd {
 				max-width: 15vw;
 			}
+
 			.table-div {
 				height: 500px;
 				overflow: auto;
 				padding: 0px;
 			}
+
 			#tableItems{
 				width: auto;
 			}
+
 			.vendorLink {
 				text-decoration: underline;
 				color: darkred;
 				cursor: pointer;
 			}
+
 			#searchbutton {
 				opacity: 0.6;
   				cursor: not-allowed;
+				margin: 1em 0;
 			}
+
 			.table-with-labels {
 				text-decoration: underline;
 			}
+
 			.table-with-labels:hover {
 				color: orange;
 				cursor: pointer;
 			}
+
 			noscript {
 				text-align: center;
 			}
+
 			.warning {
 				color: red;
 				font-size: 2vh;
 			}
+
 			#updateButton {
 				color: darkred;
+			}
+
+			#clearButton {
+				margin: 1em 0;
 			}
 		</style>
 
@@ -85,8 +111,8 @@
 			<button id='clearButton' class='btn btn-secondary' onclick="location.href='/'">Clear</button>
 			<form method='post' action='/findPonWithText' id='post_form'>
 				<input type='text' name='po_search_box' id='searchbox'><br>
-				<input type='radio' name='Search' value='po_number_search' id='po_number_search' onclick='changePost()' checked>Search PO Numbers
-				<input type='radio' name='Search' value='po_text_search' id='po_text_search' onclick='changePost()'>Search PO Files<br>
+				<input type='radio' name='Search' value='po_number_search' id='po_number_search' onclick='changePost()' checked> Search PO Numbers
+				<input type='radio' name='Search' value='po_text_search' id='po_text_search' onclick='changePost()'> Search PO Files<br>
 				<input type='submit' value='Search' class='btn btn-secondary' id='searchbutton' disabled='true'><br>
 			</form>
 		</div>
